@@ -1,0 +1,72 @@
+const Donation = require('../models/Donation');
+const crypto = require('crypto');
+
+// @desc    Create a new donation
+// @route   POST /api/donate
+// @access  Public
+exports.createDonation = async (req, res) => {
+  try {
+    const {
+      name,
+      email,
+      phone,
+      amount,
+      type,
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature
+    } = req.body;
+
+    // 🔐 VERIFY SIGNATURE
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(body.toString())
+      .digest("hex");
+
+    if (expectedSignature !== razorpay_signature) {
+      return res.status(400).json({ success: false, message: "Payment verification failed" });
+    }
+
+    // ✅ SAVE ONLY IF VERIFIED
+    const donation = await Donation.create({
+      name,
+      email,
+      phone,
+      amount,
+      type,
+      razorpay_payment_id,
+      paymentStatus: "success"
+    });
+
+    res.status(201).json({
+      success: true,
+      data: donation
+    });
+  } catch (error) {
+    console.error("Donation Save Error:", error);
+    res.status(500).json({ success: false });
+  }
+};
+
+// @desc    Get all donations
+// @route   GET /api/donations
+// @access  Private/Admin
+exports.getDonations = async (req, res) => {
+  try {
+    const donations = await Donation.find({}).sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: donations.length,
+      data: donations,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server Error',
+      error: error.message,
+    });
+  }
+};

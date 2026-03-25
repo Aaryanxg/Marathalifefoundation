@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maratha Life Foundation | Admin</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary: #C24E38;
+            --primary-hover: #A03D2A;
+            --bg-color: #F4F7F9;
+            --surface: #FFFFFF;
+            --text-main: #111827;
+            --text-muted: #6B7280;
+            --border: #E5E7EB;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+            --radius-md: 10px;
+            --radius-lg: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ── HEADER ── */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .header-titles h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .header-titles p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #ECFDF5;
+            color: #059669;
+            padding: 8px 14px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid #A7F3D0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10B981;
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px #D1FAE5;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* ── STATS CARDS ── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            padding: 28px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: #D1D5DB;
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .icon-donate { background: #FEE2E2; color: #DC2626; }
+        .icon-vol { background: #E0E7FF; color: #4F46E5; }
+        .icon-doc { background: #FEF3C7; color: #D97706; }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.025em;
+            line-height: 1;
+        }
+
+        /* ── TABLES SECTION ── */
+        .table-section {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 35px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #FAFAFA;
+        }
+
+        .table-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            padding: 16px 24px;
+            background: #FFFFFF;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 18px 24px;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+
+        tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background-color: #F9FAFB;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Typography & Utilities */
+        .td-name { font-weight: 500; color: #111827; }
+        .td-amount { font-weight: 600; color: var(--primary); }
+        .td-date { color: var(--text-muted); font-size: 0.9rem; }
+        .td-muted { color: var(--text-muted); }
+        .td-capitalize { text-transform: capitalize; }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .badge-pending { background-color: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
+        .badge-success { background-color: #D1FAE5; color: #065F46; border: 1px solid #A7F3D0; }
+        .badge-failed { background-color: #FEE2E2; color: #991B1B; border: 1px solid #FECACA; }
+
+        .state-row td {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-style: italic;
+            font-size: 0.95rem;
+            background: #FFFFFF;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(194, 78, 56, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+            color: #D1D5DB;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <!-- HEADER -->
+        <header class="dashboard-header">
+            <div class="header-titles">
+                <h1>Admin Dashboard</h1>
+                <p id="current-date">Loading date...</p>
+            </div>
+            <div class="status-badge">
+                <div class="status-dot"></div>
+                System Live
+            </div>
+        </header>
+
+        <!-- STATS CARDS -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <h3 class="stat-title">Total Donations</h3>
+                    <div class="stat-icon icon-donate">₹</div>
+                </div>
+                <div class="stat-value" id="stats-donations">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <h3 class="stat-title">Volunteers</h3>
+                    <div class="stat-icon icon-vol">👥</div>
+                </div>
+                <div class="stat-value" id="stats-volunteers">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <h3 class="stat-title">Doc Requests</h3>
+                    <div class="stat-icon icon-doc">📄</div>
+                </div>
+                <div class="stat-value" id="stats-documents">0</div>
+            </div>
+        </section>
+
+        <!-- TABLES -->
+        
+        <!-- Donations -->
+        <section class="table-section">
+            <div class="table-header">
+                <h2 class="table-title">Recent Donations</h2>
+            </div>
+            <div class="table-container">
+                <table id="donations-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Amount</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="donations-body">
+                        <tr class="state-row"><td colspan="5"><div class="loading-spinner"></div> Loading data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Volunteers -->
+        <section class="table-section">
+            <div class="table-header">
+                <h2 class="table-title">Volunteer Signups</h2>
+            </div>
+            <div class="table-container">
+                <table id="volunteers-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Duration</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="volunteers-body">
+                        <tr class="state-row"><td colspan="4"><div class="loading-spinner"></div> Loading data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Documents -->
+        <section class="table-section">
+            <div class="table-header">
+                <h2 class="table-title">Document Requests</h2>
+            </div>
+            <div class="table-container">
+                <table id="documents-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Document Requested</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="documents-body">
+                        <tr class="state-row"><td colspan="4"><div class="loading-spinner"></div> Loading data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- SCRIPT -->
+    <script>
+        const password = prompt("Enter Admin Password");
+
+        if (password !== "admin123") {
+          document.body.innerHTML = "<h2 style='text-align:center;margin-top:50px;'>Access Denied</h2>";
+        }
+
+        const API_BASE = 'http://localhost:5000/api';
+
+        // Format Date to DD MMM YYYY
+        function formatNiceDate(dateString) {
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = date.toLocaleString('en-US', { month: 'short' });
+            const year = date.getFullYear();
+            return `${day} ${month} ${year}`;
+        }
+
+        // Format Currency
+        function formatCurrency(amount) {
+            return `₹${Number(amount).toLocaleString('en-IN')}`;
+        }
+
+        // Generate clean badge html
+        function getStatusBadge(status) {
+            const rawStatus = (status || 'pending').toLowerCase();
+            let stateClass = 'badge-pending';
+            
+            if (rawStatus === 'success' || rawStatus === 'approved') stateClass = 'badge-success';
+            if (rawStatus === 'failed' || rawStatus === 'rejected') stateClass = 'badge-failed';
+            
+            return `<span class="badge ${stateClass}">${rawStatus}</span>`;
+        }
+
+        // Empty state HTML
+        function getEmptyState(cols, message) {
+            return `<tr class="state-row"><td colspan="${cols}"><span class="empty-icon">📭</span>${message}</td></tr>`;
+        }
+
+        async function safeFetch(url) {
+            try {
+                const res = await fetch(url);
+                return await res.json();
+            } catch {
+                return { data: [] };
+            }
+        }
+
+        async function fetchDashboardData() {
+            try {
+                const donationsData = await safeFetch(`${API_BASE}/donations`);
+                const volunteersData = await safeFetch(`${API_BASE}/volunteers`);
+                const documentsData = await safeFetch(`${API_BASE}/document-requests`);
+
+                renderDonations(donationsData.data);
+                renderVolunteers(volunteersData.data);
+                renderDocuments(documentsData.data);
+
+            } catch (error) {
+                console.error("Dashboard Fetch Error:", error);
+                const errorHtml = `<tr class="state-row"><td colspan="10" style="color:#DC2626"><span class="empty-icon">⚠️</span>Failed to load data. Ensure backend server is running.</td></tr>`;
+                document.getElementById('donations-body').innerHTML = errorHtml;
+                document.getElementById('volunteers-body').innerHTML = errorHtml;
+                document.getElementById('documents-body').innerHTML = errorHtml;
+            }
+        }
+
+        function renderDonations(items) {
+            document.getElementById('stats-donations').innerText = items ? items.length : 0;
+            const tbody = document.getElementById('donations-body');
+            
+            if (!items || items.length === 0) {
+                tbody.innerHTML = getEmptyState(5, "No data yet");
+                return;
+            }
+
+            tbody.innerHTML = items.map(item => `
+                <tr>
+                    <td class="td-name">${item.name || 'Anonymous'}</td>
+                    <td class="td-amount">${formatCurrency(item.amount)}</td>
+                    <td class="td-capitalize td-muted">${item.type}</td>
+                    <td class="td-date">${formatNiceDate(item.createdAt)}</td>
+                    <td>${getStatusBadge(item.paymentStatus || 'success')}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderVolunteers(items) {
+            document.getElementById('stats-volunteers').innerText = items ? items.length : 0;
+            const tbody = document.getElementById('volunteers-body');
+            
+            if (!items || items.length === 0) {
+                tbody.innerHTML = getEmptyState(4, "No data yet");
+                return;
+            }
+
+            tbody.innerHTML = items.map(item => `
+                <tr>
+                    <td class="td-name">${item.name}</td>
+                    <td class="td-muted">${item.phone || 'N/A'}</td>
+                    <td class="td-muted">${item.duration || 'N/A'}</td>
+                    <td class="td-date">${formatNiceDate(item.createdAt)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderDocuments(items) {
+            document.getElementById('stats-documents').innerText = items ? items.length : 0;
+            const tbody = document.getElementById('documents-body');
+            
+            if (!items || items.length === 0) {
+                tbody.innerHTML = getEmptyState(4, "No data yet");
+                return;
+            }
+
+            tbody.innerHTML = items.map(item => `
+                <tr>
+                    <td class="td-name">${item.name}</td>
+                    <td class="td-muted">${item.documentRequested}</td>
+                    <td class="td-date">${formatNiceDate(item.createdAt)}</td>
+                    <td>${getStatusBadge(item.status)}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('current-date').innerText = formatNiceDate(new Date());
+            fetchDashboardData();
+        });
+    </script>
+</body>
+</html>
