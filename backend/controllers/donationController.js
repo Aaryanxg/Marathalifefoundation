@@ -1,5 +1,6 @@
 const Donation = require('../models/Donation');
 const crypto = require('crypto');
+const { sendReceipt } = require('../utils/sendReceipt');
 
 // @desc    Create a new donation
 // @route   POST /api/donate
@@ -39,6 +40,12 @@ exports.createDonation = async (req, res) => {
       razorpay_payment_id,
       paymentStatus: "success"
     });
+
+    try {
+      await sendReceipt(req.body);
+    } catch (emailErr) {
+      console.error("Failed to send receipt email:", emailErr);
+    }
 
     res.status(201).json({
       success: true,

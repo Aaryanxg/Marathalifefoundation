@@ -22,11 +22,13 @@ const donationRoutes = require('./routes/donationRoutes');
 const volunteerRoutes = require('./routes/volunteerRoutes');
 const documentRequestRoutes = require('./routes/documentRequestRoutes');
 const razorpayRoutes = require('./routes/razorpayRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 // Mount routes
 app.use('/api/donations', donationRoutes);
 app.use('/api/volunteers', volunteerRoutes);
 app.use('/api/document-requests', documentRequestRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api', razorpayRoutes);
 
 // Basic test route
