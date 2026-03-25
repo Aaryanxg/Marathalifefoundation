@@ -1032,6 +1032,7 @@
           donateBtn.disabled = true;
           document.body.style.transition = "opacity 0.3s";
           document.body.style.opacity = "0.5";
+          document.body.style.pointerEvents = "none";
 
           try {
             // Step 1: Create Razorpay order on backend
@@ -1062,8 +1063,19 @@
                 contact: phone
               },
               theme: { color: "#C24E38" },
+              modal: {
+                ondismiss: function () {
+                  document.body.style.opacity = "1";
+                  document.body.style.pointerEvents = "auto";
+                  donateBtn.disabled = false;
+                  updateCTA();
+                }
+              },
               handler: async function (response) {
                 try {
+                  document.body.style.opacity = "1";
+                  document.body.style.pointerEvents = "auto";
+                  
                   const type = document.getElementById('tab-monthly').classList.contains('active') ? 'monthly' : 'one-time';
 
                   const res = await fetch("https://maratha-backend.onrender.com/api/donations", {
@@ -1103,6 +1115,9 @@ z-index:9999;">
                 } catch (err) {
                   console.error("ERROR:", err);
                   alert("Saved failed");
+                } finally {
+                  donateBtn.disabled = false;
+                  updateCTA();
                 }
               }
             };
@@ -1110,6 +1125,10 @@ z-index:9999;">
             const rzp = new Razorpay(options);
 
             rzp.on('payment.failed', function (response) {
+              document.body.style.opacity = "1";
+              document.body.style.pointerEvents = "auto";
+              donateBtn.disabled = false;
+              updateCTA();
               alert('Payment failed: ' + response.error.description);
               console.error('Payment failed:', response.error);
             });
@@ -1120,7 +1139,7 @@ z-index:9999;">
             console.error('Donation error:', err);
             alert('Error: ' + err.message);
             document.body.style.opacity = "1";
-          } finally {
+            document.body.style.pointerEvents = "auto";
             donateBtn.disabled = false;
             updateCTA();
           }
