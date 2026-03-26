@@ -1,5 +1,5 @@
 const DocumentRequest = require('../models/DocumentRequest');
-const { sendDocumentRequestAlert } = require('../utils/sendEmail');
+const { sendDocumentRequestAlert, sendDocumentApproval, sendDocumentRejection } = require('../utils/sendEmail');
 
 // @desc    Create a new document request
 // @route   POST /api/document-request
@@ -84,6 +84,13 @@ const updateDocumentRequestStatus = async (req, res) => {
         success: false,
         message: 'Document request not found',
       });
+    }
+
+    // Email Triggers
+    if (status === 'approved') {
+      sendDocumentApproval(request.email, request.name, request.documentRequested, request._id);
+    } else if (status === 'rejected') {
+      sendDocumentRejection(request.email, request.name, request.documentRequested);
     }
 
     res.status(200).json({

@@ -29,6 +29,10 @@ const donationSchema = new mongoose.Schema({
   razorpay_payment_id: {
     type: String,
   },
+  method: {
+    type: String,
+    default: 'N/A',
+  },
   createdAt: {
     type: Date,
     default: Date.now,

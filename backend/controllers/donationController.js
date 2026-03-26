@@ -1,6 +1,7 @@
 const Donation = require('../models/Donation');
 const crypto = require('crypto');
 const { sendReceipt } = require('../utils/sendReceipt');
+const Razorpay = require('razorpay');
 
 // @desc    Create a new donation
 // @route   POST /api/donate
@@ -30,6 +31,18 @@ exports.createDonation = async (req, res) => {
       return res.status(400).json({ success: false, message: "Payment verification failed" });
     }
 
+    let method = 'Unknown';
+    try {
+      const rzp = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_KEY_SECRET,
+      });
+      const paymentDetails = await rzp.payments.fetch(razorpay_payment_id);
+      method = paymentDetails.method || 'Unknown';
+    } catch (e) {
+      console.error("Failed to fetch Razorpay payment method:", e);
+    }
+
     // ✅ SAVE ONLY IF VERIFIED
     const donation = await Donation.create({
       name,
@@ -38,7 +51,8 @@ exports.createDonation = async (req, res) => {
       amount,
       type,
       razorpay_payment_id,
-      paymentStatus: "success"
+      paymentStatus: "success",
+      method
     });
 
     try {

@@ -337,6 +337,7 @@
                         <tr>
                             <th>Name</th>
                             <th>Amount</th>
+                            <th>Mode</th>
                             <th>Type</th>
                             <th>Date</th>
                             <th>Status</th>
@@ -359,13 +360,15 @@
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Phone</th>
+                            <th>Contact</th>
+                            <th>Address</th>
+                            <th>Skills / Interest</th>
                             <th>Duration</th>
                             <th>Date</th>
                         </tr>
                     </thead>
                     <tbody id="volunteers-body">
-                        <tr class="state-row"><td colspan="4"><div class="loading-spinner"></div> Loading data...</td></tr>
+                        <tr class="state-row"><td colspan="6"><div class="loading-spinner"></div> Loading data...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -380,14 +383,17 @@
                 <table id="documents-table">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Document Requested</th>
+                            <th>Requester</th>
+                            <th>Contact</th>
+                            <th>Organization</th>
+                            <th>Document</th>
+                            <th>Purpose</th>
                             <th>Date</th>
                             <th>Status</th>
                         </tr>
                     </thead>
                     <tbody id="documents-body">
-                        <tr class="state-row"><td colspan="4"><div class="loading-spinner"></div> Loading data...</td></tr>
+                        <tr class="state-row"><td colspan="7"><div class="loading-spinner"></div> Loading data...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -468,7 +474,7 @@
             const tbody = document.getElementById('donations-body');
             
             if (!items || items.length === 0) {
-                tbody.innerHTML = getEmptyState(5, "No data yet");
+                tbody.innerHTML = getEmptyState(6, "No data yet");
                 return;
             }
 
@@ -476,6 +482,7 @@
                 <tr>
                     <td class="td-name">${item.name || 'Anonymous'}</td>
                     <td class="td-amount">${formatCurrency(item.amount)}</td>
+                    <td class="td-capitalize td-muted"><span style="background: #F3F4F6; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #E5E7EB; text-transform: uppercase;">${item.method || 'N/A'}</span></td>
                     <td class="td-capitalize td-muted">${item.type}</td>
                     <td class="td-date">${formatNiceDate(item.createdAt)}</td>
                     <td>
@@ -491,14 +498,16 @@
             const tbody = document.getElementById('volunteers-body');
             
             if (!items || items.length === 0) {
-                tbody.innerHTML = getEmptyState(4, "No data yet");
+                tbody.innerHTML = getEmptyState(6, "No data yet");
                 return;
             }
 
             tbody.innerHTML = items.map(item => `
                 <tr>
-                    <td class="td-name">${item.name}</td>
-                    <td class="td-muted">${item.phone || 'N/A'}</td>
+                    <td class="td-name">${item.name || 'N/A'}</td>
+                    <td class="td-muted" style="line-height:1.4">${item.email || 'N/A'}<br><span style="font-size:0.85rem;color:#9CA3AF">${item.phone || 'N/A'}</span></td>
+                    <td class="td-muted" style="max-width:200px; white-space:normal; font-size:0.85rem;">${item.address || 'N/A'}</td>
+                    <td class="td-muted" style="max-width:200px; white-space:normal; font-size:0.85rem;">${item.skills || 'N/A'}</td>
                     <td class="td-muted">${item.duration || 'N/A'}</td>
                     <td class="td-date">${formatNiceDate(item.createdAt)}</td>
                 </tr>
@@ -510,16 +519,27 @@
             const tbody = document.getElementById('documents-body');
             
             if (!items || items.length === 0) {
-                tbody.innerHTML = getEmptyState(4, "No data yet");
+                tbody.innerHTML = getEmptyState(7, "No data yet");
                 return;
             }
 
             tbody.innerHTML = items.map(item => `
                 <tr>
-                    <td class="td-name">${item.name}</td>
-                    <td class="td-muted">${item.documentRequested}</td>
+                    <td class="td-name">${item.name || 'N/A'}</td>
+                    <td class="td-muted" style="line-height:1.4">${item.email || 'N/A'}<br><span style="font-size:0.85rem;color:#9CA3AF">${item.phone || 'N/A'}</span></td>
+                    <td class="td-muted">${item.organization || 'N/A'}</td>
+                    <td class="td-muted td-name">${item.documentRequested || 'N/A'}</td>
+                    <td class="td-muted" style="max-width:200px; white-space:normal; font-size:0.85rem;">${item.purpose || 'N/A'}</td>
                     <td class="td-date">${formatNiceDate(item.createdAt)}</td>
-                    <td>${getStatusBadge(item.status)}</td>
+                    <td>
+                        ${getStatusBadge(item.status)}
+                        ${(item.status === 'pending') ? `
+                            <div style="margin-top: 8px; display: flex; gap: 5px;">
+                                <button onclick="updateDocument('${item._id}', 'approved')" class="badge" style="cursor:pointer; background: #fff; border: 1px solid #10B981; color: #10B981;">Approve</button>
+                                <button onclick="updateDocument('${item._id}', 'rejected')" class="badge" style="cursor:pointer; background: #fff; border: 1px solid #EF4444; color: #EF4444;">Decline</button>
+                            </div>
+                        ` : ''}
+                    </td>
                 </tr>
             `).join('');
         }
@@ -541,6 +561,27 @@
             } catch(e) {
                 console.error(e);
                 alert("Error approving.");
+            }
+        }
+
+        async function updateDocument(id, newStatus) {
+            if (!confirm(`Are you sure you want to ${newStatus} this request?`)) return;
+            try {
+                const res = await fetch(`${API_BASE}/document-requests/${id}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert(`Request has been ${newStatus}. Emails have been dispatched automatically.`);
+                    location.reload();
+                } else {
+                    alert("Error: " + data.message);
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Network error.");
             }
         }
     </script>
