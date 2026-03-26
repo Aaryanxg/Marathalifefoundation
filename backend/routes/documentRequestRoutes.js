@@ -6,8 +6,8 @@ const {
   updateDocumentRequestStatus,
 } = require('../controllers/documentRequestController');
 
-router.post('/document-request', createDocumentRequest);
-router.get('/document-requests', getDocumentRequests);
-router.patch('/document-requests/:id', updateDocumentRequestStatus);
+router.post('/', createDocumentRequest);
+router.get('/', getDocumentRequests);
+router.patch('/:id', updateDocumentRequestStatus);
 
 module.exports = router;
