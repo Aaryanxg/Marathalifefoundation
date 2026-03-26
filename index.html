@@ -1034,6 +1034,11 @@
           document.body.style.opacity = "0.5";
           document.body.style.pointerEvents = "none";
 
+          setTimeout(() => {
+            document.body.style.opacity = "1";
+            document.body.style.pointerEvents = "auto";
+          }, 10000);
+
           try {
             // Step 1: Create Razorpay order on backend
             const res = await fetch('https://maratha-backend.onrender.com/api/create-order', {
@@ -1050,75 +1055,58 @@
             const order = await res.json();
 
             // Step 2: Open Razorpay Checkout
-            const options = {
-              key: "rzp_test_SUmUY4FglFiW6a",
-              amount: order.amount,
-              currency: order.currency,
+            var options = {
+              key: "rzp_test_SUmUY4FglFiW6a", // keep test key for now
+              amount: currentAmount * 100,
+              currency: "INR",
               name: "Maratha Life Foundation",
               description: "Donation",
-              order_id: order.id,
-              prefill: {
-                name: name,
-                email: email,
-                contact: phone
+
+              handler: function (response) {
+
+                // ✅ RESET UI (VERY IMPORTANT)
+                document.body.style.opacity = "1";
+                document.body.style.pointerEvents = "auto";
+
+                const type = document.getElementById('tab-monthly').classList.contains('active') ? 'monthly' : 'one-time';
+
+                // ✅ SAVE DATA
+                fetch("https://maratha-backend.onrender.com/api/donations", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({
+                    name,
+                    email,
+                    phone,
+                    amount: currentAmount,
+                    type,
+                    razorpay_payment_id: response.razorpay_payment_id
+                  })
+                });
+
+                // ✅ SUCCESS UI
+                alert("Payment Successful ❤️");
+                donateBtn.disabled = false;
+                updateCTA();
               },
-              theme: { color: "#C24E38" },
+
               modal: {
                 ondismiss: function () {
+
+                  // ❌ FIX CLOSE BUTTON ISSUE
                   document.body.style.opacity = "1";
                   document.body.style.pointerEvents = "auto";
+
+                  console.log("Payment popup closed");
                   donateBtn.disabled = false;
                   updateCTA();
                 }
               },
-              handler: async function (response) {
-                try {
-                  document.body.style.opacity = "1";
-                  document.body.style.pointerEvents = "auto";
-                  
-                  const type = document.getElementById('tab-monthly').classList.contains('active') ? 'monthly' : 'one-time';
 
-                  const res = await fetch("https://maratha-backend.onrender.com/api/donations", {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                      name: name,
-                      email: email,
-                      phone: phone,
-                      amount: currentAmount,
-                      type: type,
-                      razorpay_order_id: response.razorpay_order_id,
-                      razorpay_payment_id: response.razorpay_payment_id,
-                      razorpay_signature: response.razorpay_signature
-                    })
-                  });
-
-                  const data = await res.json();
-                  console.log("Saved:", data);
-
-                  document.body.style.opacity = "1";
-
-                  document.body.innerHTML += `
-<div style="
-position:fixed;top:0;left:0;width:100%;height:100%;
-background:#000000aa;display:flex;align-items:center;justify-content:center;
-z-index:9999;">
-  <div style="background:white;padding:30px;border-radius:10px;text-align:center">
-    <h2 style="color: #C24E38; margin-bottom: 10px;">❤️ Thank You!</h2>
-    <p style="color: #333;">Your donation has been received</p>
-    <button onclick="this.parentElement.parentElement.remove()" style="margin-top:20px; padding: 10px 20px; background: #C24E38; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
-  </div>
-</div>`;
-
-                } catch (err) {
-                  console.error("ERROR:", err);
-                  alert("Saved failed");
-                } finally {
-                  donateBtn.disabled = false;
-                  updateCTA();
-                }
+              theme: {
+                color: "#b44b2a"
               }
             };
 
