@@ -406,11 +406,11 @@
             <!-- Progress Bar -->
             <div class="campaign-progress-wrapper">
               <div class="campaign-progress-labels">
-                <span>Raised: <strong>₹1,20,000</strong></span>
-                <span>Goal: <strong>₹₹9,45,00,000</strong></span>
+                <span>Raised: <strong id="campaignRaised">₹1,20,000</strong></span>
+                <span>Goal: <strong>₹9,45,00,000</strong></span>
               </div>
               <div class="campaign-progress-track">
-                <div class="campaign-progress-bar" data-progress="15"></div>
+                <div class="campaign-progress-bar" id="campaignBar" data-progress="1.2"></div>
               </div>
             </div>
 
@@ -1267,13 +1267,32 @@
 
         let total = 0;
         data.data.forEach(d => {
-          if (d.paymentStatus === "approved" || d.paymentStatus === "pending") {
+          if (d.paymentStatus === "approved" || d.paymentStatus === "pending" || d.paymentStatus === "success") {
             total += d.amount;
           }
         });
 
+        // 1. Update Donation Box Live Counter
         document.getElementById("donationCount").innerText =
-          `₹${total.toLocaleString()} raised so far ❤️`;
+          `₹${total.toLocaleString('en-IN')} raised so far ❤️`;
+
+        // 2. Update Campaign Section Live Counter (Stack initial offline offline goal base)
+        const campaignBaseAmount = 120000;
+        const totalRaised = campaignBaseAmount + total;
+        
+        const campaignRaisedEl = document.getElementById("campaignRaised");
+        if (campaignRaisedEl) {
+          campaignRaisedEl.innerText = `₹${totalRaised.toLocaleString('en-IN')}`;
+        }
+
+        const campaignBar = document.getElementById("campaignBar");
+        if (campaignBar) {
+          const GOAL = 94500000; // 9.45 Cr
+          let pct = (totalRaised / GOAL) * 100;
+          if (pct > 100) pct = 100;
+          campaignBar.setAttribute("data-progress", pct);
+          campaignBar.style.width = pct + "%";
+        }
 
       } catch (err) {
         console.log("Error loading total");
