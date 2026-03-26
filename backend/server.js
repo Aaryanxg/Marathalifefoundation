@@ -7,7 +7,9 @@ const bodyParser = require('body-parser');
 const app = express();
 
 // Middleware
-app.use(cors({ origin: "*" }));
+app.use(cors({
+  origin: "*", // TEMP FIX (later restrict)
+}));
 // Parse incoming request bodies in a middleware before your handlers
 app.use(bodyParser.json());
 app.use(express.json()); // Built-in middleware for parsing JSON
