@@ -30,7 +30,7 @@ exports.sendReceipt = async (data) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: "yourgmail@gmail.com",
+      user: "asmr.bliss07@gmail.com",
       pass: "your-app-password"
     }
   });
