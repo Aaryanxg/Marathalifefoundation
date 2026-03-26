@@ -1,4 +1,5 @@
 const DocumentRequest = require('../models/DocumentRequest');
+const { sendDocumentRequestAlert } = require('../utils/sendEmail');
 
 // @desc    Create a new document request
 // @route   POST /api/document-request
@@ -18,6 +19,9 @@ const createDocumentRequest = async (req, res) => {
     });
 
     const savedRequest = await request.save();
+
+    // Send email alert to NGO
+    sendDocumentRequestAlert(name, documentRequested, phone);
 
     res.status(201).json({
       success: true,
