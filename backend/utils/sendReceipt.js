@@ -26,27 +26,39 @@ exports.sendReceipt = async (data) => {
     stream.on("error", reject);
   });
 
-  // Send Email
+  // Send Email via Brevo SMTP
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp-relay.brevo.com",
+    port: 587,
     auth: {
-      user: process.env.EMAIL_USER || "asmr.bliss07@gmail.com",
-      pass: process.env.EMAIL_PASS || "your-app-password"
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS
     }
   });
 
-  await transporter.sendMail({
-    from: "Maratha Life Foundation",
-    to: email,
-    subject: "Donation Receipt ❤️",
-    text: "Thank you for your generous donation! Please find your official receipt attached.",
-    attachments: [
-      {
-        filename: "receipt.pdf",
-        path: filePath
-      }
-    ]
-  });
+  try {
+    const info = await transporter.sendMail({
+      from: `"Maratha Life Foundation" <${process.env.SMTP_USER}>`,
+      to: email,
+      subject: "Donation Receipt ❤️",
+      html: `
+        <h2>Thank You ${name} 🙏</h2>
+        <p>We have received your donation of <b>₹${amount}</b>.</p>
+        <p>Please find your official receipt attached.</p>
+        <p>Your support means a lot ❤️<br>— Maratha Life Foundation</p>
+      `,
+      attachments: [
+        {
+          filename: "MLF_Donation_Receipt.pdf",
+          path: filePath
+        }
+      ]
+    });
+    console.log(`Donation receipt email sent to ${email}. Message ID: ${info.messageId}`);
+  } catch (mailErr) {
+    console.error(`Failed to send donation receipt email to ${email}. Error:`, mailErr);
+    throw mailErr;
+  }
 
   // Clean up
   try {
