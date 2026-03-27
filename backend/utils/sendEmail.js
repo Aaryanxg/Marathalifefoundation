@@ -4,32 +4,38 @@ const fs = require("fs");
 const path = require("path");
 
 const createTransporter = () => nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp-relay.brevo.com",
+  port: 587,
   auth: {
-    user: process.env.EMAIL_USER || "asmr.bliss07@gmail.com",
-    pass: process.env.EMAIL_PASS || "your-app-password"
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
   }
 });
 
 exports.sendDonationEmail = async (email, name, amount) => {
-  const transporter = createTransporter();
-  await transporter.sendMail({
-    from: "Maratha Life Foundation",
-    to: email,
-    subject: "Donation Received ❤️",
-    html: `
-      <h2>Thank You ${name} 🙏</h2>
-      <p>We have received your donation of ₹${amount}.</p>
-      <p>Your support means a lot ❤️</p>
-    `
-  });
+  try {
+    const transporter = createTransporter();
+    const info = await transporter.sendMail({
+      from: `"Maratha Life Foundation" <${process.env.SMTP_USER}>`,
+      to: email,
+      subject: "Donation Received ❤️",
+      html: `
+        <h2>Thank You ${name} 🙏</h2>
+        <p>We have received your donation of ₹${amount}.</p>
+        <p>Your support means a lot ❤️</p>
+      `
+    });
+    console.log(`Donation email sent to ${email}. Message ID: ${info.messageId}`);
+  } catch (err) {
+    console.error(`Failed to send donation email to ${email}:`, err);
+  }
 };
 
 exports.sendVolunteerAlert = async (name, phone) => {
   try {
     const transporter = createTransporter();
-    await transporter.sendMail({
-      from: "Maratha Life Foundation System",
+    const info = await transporter.sendMail({
+      from: `"Maratha Life Foundation System" <${process.env.SMTP_USER}>`,
       to: process.env.EMAIL_USER || "asmr.bliss07@gmail.com",
       subject: "⚠️ New Volunteer Registration",
       html: `
@@ -39,6 +45,7 @@ exports.sendVolunteerAlert = async (name, phone) => {
         <p>Please check the admin dashboard for full details.</p>
       `
     });
+    console.log(`Volunteer alert email sent. Message ID: ${info.messageId}`);
   } catch (err) {
     console.error("Failed to send volunteer alert:", err);
   }
@@ -47,8 +54,8 @@ exports.sendVolunteerAlert = async (name, phone) => {
 exports.sendDocumentRequestAlert = async (name, documentRequested, phone) => {
   try {
     const transporter = createTransporter();
-    await transporter.sendMail({
-      from: "Maratha Life Foundation System",
+    const info = await transporter.sendMail({
+      from: `"Maratha Life Foundation System" <${process.env.SMTP_USER}>`,
       to: process.env.EMAIL_USER || "asmr.bliss07@gmail.com",
       subject: "⚠️ New Document Request",
       html: `
@@ -59,6 +66,7 @@ exports.sendDocumentRequestAlert = async (name, documentRequested, phone) => {
         <p>Please fulfill this request via the admin dashboard.</p>
       `
     });
+    console.log(`Document request alert email sent. Message ID: ${info.messageId}`);
   } catch (err) {
     console.error("Failed to send document request alert:", err);
   }
@@ -96,8 +104,8 @@ exports.sendDocumentApproval = async (email, name, documentRequested, id) => {
     });
 
     const transporter = createTransporter();
-    await transporter.sendMail({
-      from: "Maratha Life Foundation",
+    const info = await transporter.sendMail({
+      from: `"Maratha Life Foundation" <${process.env.SMTP_USER}>`,
       to: email,
       subject: `Approved: Your Request for ${documentRequested}`,
       html: `
@@ -114,22 +122,24 @@ exports.sendDocumentApproval = async (email, name, documentRequested, id) => {
       ]
     });
 
+    console.log(`Document approval email successfully sent to ${email}. Message ID: ${info.messageId}`);
+
     try {
       fs.unlinkSync(filePath);
     } catch (e) {
-      console.error("Failed to delete temp document:", e);
+      console.error(`Failed to delete temp document ${filePath}:`, e);
     }
 
   } catch (err) {
-    console.error("Failed to send approval email:", err);
+    console.error(`Failed to send approval email to ${email}. Error:`, err);
   }
 };
 
 exports.sendDocumentRejection = async (email, name, documentRequested) => {
   try {
     const transporter = createTransporter();
-    await transporter.sendMail({
-      from: "Maratha Life Foundation",
+    const info = await transporter.sendMail({
+      from: `"Maratha Life Foundation" <${process.env.SMTP_USER}>`,
       to: email,
       subject: `Update on your Request for ${documentRequested}`,
       html: `
@@ -140,7 +150,8 @@ exports.sendDocumentRejection = async (email, name, documentRequested) => {
         <p>Warm regards,<br>Maratha Life Foundation</p>
       `
     });
+    console.log(`Document rejection email successfully sent to ${email}. Message ID: ${info.messageId}`);
   } catch (err) {
-    console.error("Failed to send rejection email:", err);
+    console.error(`Failed to send rejection email to ${email}. Error:`, err);
   }
 };
