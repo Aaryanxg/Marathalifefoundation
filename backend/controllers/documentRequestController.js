@@ -64,6 +64,7 @@ const getDocumentRequests = async (req, res) => {
 const updateDocumentRequestStatus = async (req, res) => {
   try {
     const { status } = req.body;
+    console.log(`[CONTROLLER] PATCH received: id=${req.params.id}, status=${status}`);
 
     // Allowed statuses
     if (!['pending', 'approved', 'rejected'].includes(status)) {
@@ -80,17 +81,24 @@ const updateDocumentRequestStatus = async (req, res) => {
     );
 
     if (!request) {
+      console.warn(`[CONTROLLER] Document request not found: ${req.params.id}`);
       return res.status(404).json({
         success: false,
         message: 'Document request not found',
       });
     }
 
+    console.log(`[CONTROLLER] DB updated. Request email=${request.email}, name=${request.name}, doc=${request.documentRequested}`);
+
     // Email Triggers
     if (status === 'approved') {
-      sendDocumentApproval(request.email, request.name, request.documentRequested, request._id);
+      console.log(`[CONTROLLER] Triggering sendDocumentApproval for ${request.email}...`);
+      await sendDocumentApproval(request.email, request.name, request.documentRequested, request._id);
+      console.log(`[CONTROLLER] sendDocumentApproval completed for ${request.email}`);
     } else if (status === 'rejected') {
-      sendDocumentRejection(request.email, request.name, request.documentRequested);
+      console.log(`[CONTROLLER] Triggering sendDocumentRejection for ${request.email}...`);
+      await sendDocumentRejection(request.email, request.name, request.documentRequested);
+      console.log(`[CONTROLLER] sendDocumentRejection completed for ${request.email}`);
     }
 
     res.status(200).json({
@@ -99,6 +107,7 @@ const updateDocumentRequestStatus = async (req, res) => {
       data: request,
     });
   } catch (error) {
+    console.error(`[CONTROLLER] ERROR in updateDocumentRequestStatus:`, error);
     res.status(500).json({
       success: false,
       message: 'Server Error',

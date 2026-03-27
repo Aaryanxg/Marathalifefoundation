@@ -2,15 +2,26 @@ const nodemailer = require("nodemailer");
 const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
+const os = require("os");
 
-const createTransporter = () => nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
-  port: 587,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
+// ── ENV GUARD (visible in Render startup logs) ──────────────────────────────
+console.log("[sendEmail] SMTP_USER present:", !!process.env.SMTP_USER);
+console.log("[sendEmail] SMTP_PASS present:", !!process.env.SMTP_PASS);
+
+const createTransporter = () => {
+  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+    throw new Error("SMTP_USER or SMTP_PASS env variable is missing. Check Render environment settings.");
   }
-});
+  return nodemailer.createTransport({
+    host: "smtp-relay.brevo.com",
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS
+    }
+  });
+};
 
 exports.sendDonationEmail = async (email, name, amount) => {
   try {
@@ -73,9 +84,15 @@ exports.sendDocumentRequestAlert = async (name, documentRequested, phone) => {
 };
 
 exports.sendDocumentApproval = async (email, name, documentRequested, id) => {
+  console.log(`[APPROVAL] ── Step 1: Approval triggered for ${email}, document: "${documentRequested}", id: ${id}`);
+  console.log(`[APPROVAL] ── Step 2: SMTP_USER=${process.env.SMTP_USER || 'MISSING!'}, SMTP_PASS=${process.env.SMTP_PASS ? 'set' : 'MISSING!'}`);
+
+  // Use /tmp which is always writable on Render (ephemeral filesystem)
+  const filePath = path.join(os.tmpdir(), `document_${id}.pdf`);
+  console.log(`[APPROVAL] ── Step 3: PDF will be written to: ${filePath}`);
+
   try {
-    const filePath = path.join(__dirname, `document_${id}.pdf`);
-    
+    // ── STEP 4: Generate PDF ─────────────────────────────────────────────────
     await new Promise((resolve, reject) => {
       const doc = new PDFDocument();
       const stream = fs.createWriteStream(filePath);
@@ -85,34 +102,44 @@ exports.sendDocumentApproval = async (email, name, documentRequested, id) => {
       doc.moveDown();
       doc.fontSize(16).text(`Official Document: ${documentRequested}`, { align: "center", underline: true });
       doc.moveDown(2);
-      
       doc.fontSize(12).text(`This document is officially issued to: ${name}`);
       doc.moveDown();
       doc.text(`Requested Document: ${documentRequested}`);
-      doc.text(`Issuance Date: ${new Date().toLocaleDateString()}`);
+      doc.text(`Issuance Date: ${new Date().toLocaleDateString("en-IN")}`);
       doc.text(`Issuance ID: ${id}`);
-      
       doc.moveDown(4);
       doc.text("Approved By:", { align: "right" });
       doc.text("Admin Department", { align: "right" });
       doc.text("Maratha Life Foundation", { align: "right" });
-
       doc.end();
 
-      stream.on("finish", resolve);
-      stream.on("error", reject);
+      stream.on("finish", () => {
+        console.log(`[APPROVAL] ── Step 4: PDF generated successfully at ${filePath}`);
+        resolve();
+      });
+      stream.on("error", (err) => {
+        console.error(`[APPROVAL] ── Step 4 FAILED: PDF generation error:`, err);
+        reject(err);
+      });
     });
 
+    // ── STEP 5: Send Email ───────────────────────────────────────────────────
+    console.log(`[APPROVAL] ── Step 5: Creating Brevo SMTP transporter...`);
     const transporter = createTransporter();
+
+    console.log(`[APPROVAL] ── Step 6: Sending approval email to ${email}...`);
     const info = await transporter.sendMail({
       from: `"Maratha Life Foundation" <${process.env.SMTP_USER}>`,
       to: email,
-      subject: `Approved: Your Request for ${documentRequested}`,
+      subject: `✅ Approved: Your Request for ${documentRequested}`,
       html: `
-        <h2>Hello ${name},</h2>
-        <p>Your request for the <b>${documentRequested}</b> has been approved.</p>
-        <p>Please find the official document attached securely to this email.</p>
-        <p>Warm regards,<br>Maratha Life Foundation</p>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #C24E38;">Hello ${name},</h2>
+          <p>Your request for the <b>${documentRequested}</b> has been <b style="color:green;">approved</b>.</p>
+          <p>Please find the official document attached securely to this email.</p>
+          <br/>
+          <p style="color:#555;">Warm regards,<br/><b>Maratha Life Foundation</b></p>
+        </div>
       `,
       attachments: [
         {
@@ -122,16 +149,19 @@ exports.sendDocumentApproval = async (email, name, documentRequested, id) => {
       ]
     });
 
-    console.log(`Document approval email successfully sent to ${email}. Message ID: ${info.messageId}`);
+    console.log(`[APPROVAL] ── Step 7: SUCCESS ✅ Email sent to ${email}. Message ID: ${info.messageId}`);
 
+    // ── CLEANUP ──────────────────────────────────────────────────────────────
     try {
       fs.unlinkSync(filePath);
+      console.log(`[APPROVAL] ── Step 8: Temp PDF deleted from ${filePath}`);
     } catch (e) {
-      console.error(`Failed to delete temp document ${filePath}:`, e);
+      console.warn(`[APPROVAL] ── Step 8 WARN: Could not delete temp PDF:`, e.message);
     }
 
   } catch (err) {
-    console.error(`Failed to send approval email to ${email}. Error:`, err);
+    console.error(`[APPROVAL] ── FAILED ❌ Error during approval email flow for ${email}:`);
+    console.error(err);
   }
 };
 
