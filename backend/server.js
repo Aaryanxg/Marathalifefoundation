@@ -39,16 +39,24 @@ app.get('/', (req, res) => {
 });
 
 // ── SMTP DEBUG ROUTE ─────────────────────────────────────────────────────────
-// Hit GET /api/test-email in browser to confirm Brevo SMTP works on Render
+// Hit GET /api/test-email in your browser to independently confirm Brevo SMTP works
 app.get('/api/test-email', async (req, res) => {
   const nodemailer = require('nodemailer');
-  console.log('[TEST-EMAIL] SMTP_USER:', process.env.SMTP_USER || 'MISSING');
-  console.log('[TEST-EMAIL] SMTP_PASS:', process.env.SMTP_PASS ? 'set' : 'MISSING');
 
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+  // Log all three required env vars
+  console.log('[TEST-EMAIL] SMTP_USER (Brevo auth login):', process.env.SMTP_USER || 'MISSING');
+  console.log('[TEST-EMAIL] SMTP_PASS:', process.env.SMTP_PASS ? 'set' : 'MISSING');
+  console.log('[TEST-EMAIL] SMTP_FROM (verified sender):', process.env.SMTP_FROM || 'MISSING');
+
+  if (!process.env.SMTP_USER || !process.env.SMTP_PASS || !process.env.SMTP_FROM) {
     return res.status(500).json({
       success: false,
-      error: 'SMTP_USER or SMTP_PASS env variable is missing on this server.'
+      error: 'One or more SMTP env variables are missing.',
+      detail: {
+        SMTP_USER: !!process.env.SMTP_USER,
+        SMTP_PASS: !!process.env.SMTP_PASS,
+        SMTP_FROM: !!process.env.SMTP_FROM
+      }
     });
   }
 
@@ -58,22 +66,29 @@ app.get('/api/test-email', async (req, res) => {
       port: 587,
       secure: false,
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS
+        user: process.env.SMTP_USER,   // Brevo SMTP login (e.g. a6473d001@smtp-brevo.com)
+        pass: process.env.SMTP_PASS    // Brevo SMTP key
       }
     });
 
+    // Step 1: Verify the SMTP connection before sending
+    console.log('[TEST-EMAIL] Verifying SMTP connection...');
+    await transporter.verify();
+    console.log('[TEST-EMAIL] ✅ SMTP connection verified.');
+
+    // Step 2: Send a test email to the verified sender address
+    console.log('[TEST-EMAIL] Sending test email...');
     const info = await transporter.sendMail({
-      from: `"MLF Debug" <${process.env.SMTP_USER}>`,
-      to: process.env.SMTP_USER,  // sends test email to yourself
+      from: `"MLF Debug" <${process.env.SMTP_FROM}>`,
+      to: process.env.SMTP_FROM,
       subject: '✅ Brevo SMTP Test — Render',
-      html: `<h2>SMTP is working!</h2><p>This test email was sent from your Render deployment using Brevo SMTP.</p><p>Time: ${new Date().toISOString()}</p>`
+      html: `<h2>SMTP is working!</h2><p>Sent from <b>${process.env.SMTP_FROM}</b> via Brevo relay.</p><p>Time: ${new Date().toISOString()}</p>`
     });
 
-    console.log('[TEST-EMAIL] SUCCESS. Message ID:', info.messageId);
-    res.json({ success: true, messageId: info.messageId });
+    console.log('[TEST-EMAIL] ✅ SUCCESS. Message ID:', info.messageId);
+    res.json({ success: true, messageId: info.messageId, from: process.env.SMTP_FROM });
   } catch (err) {
-    console.error('[TEST-EMAIL] FAILED:', err);
+    console.error('[TEST-EMAIL] ❌ FAILED:', err.message);
     res.status(500).json({ success: false, error: err.message });
   }
 });
