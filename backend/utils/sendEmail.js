@@ -4,45 +4,36 @@ const fs = require("fs");
 const path = require("path");
 const os = require("os");
 
-// ── ENV GUARD (visible in Render startup logs) ──────────────────────────────
-// Brevo SMTP uses TWO separate identities:
-//   SMTP_USER  = Brevo SMTP login  (e.g. a6473d001@smtp-brevo.com)  ← auth only
-//   SMTP_PASS  = Brevo SMTP key                                      ← auth only
-//   SMTP_FROM  = verified sender   (e.g. asmr.bliss07@gmail.com)    ← from: field
+// ── ENV GUARD ──────────────────────────────────────────────────────────────
 console.log("[sendEmail] SMTP_USER present:", !!process.env.SMTP_USER);
 console.log("[sendEmail] SMTP_PASS present:", !!process.env.SMTP_PASS);
 console.log("[sendEmail] SMTP_FROM present:", !!process.env.SMTP_FROM);
 
 const createTransporter = async () => {
   if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-    throw new Error("SMTP_USER or SMTP_PASS env variable is missing. Check Render environment settings.");
-  }
-  if (!process.env.SMTP_FROM) {
-    throw new Error("SMTP_FROM env variable is missing. Set it to your Brevo verified sender email (e.g. asmr.bliss07@gmail.com).");
+    throw new Error("SMTP_USER or SMTP_PASS env variable is missing. Check your .env file.");
   }
 
+  // ✅ SWITCHED FROM BREVO TO GMAIL
   const transporter = nodemailer.createTransport({
-    host: "smtp-relay.brevo.com",
-    port: 587,
-    secure: false,
+    service: 'gmail', 
     auth: {
-      user: process.env.SMTP_USER,   // Brevo SMTP login (xxxxxxx@smtp-brevo.com)
-      pass: process.env.SMTP_PASS    // Brevo SMTP key
+      user: process.env.SMTP_USER,   // Your Gmail: asmr.bliss07@gmail.com
+      pass: process.env.SMTP_PASS    // Your App Pass: ndnhfxujvynqstyp
     }
   });
 
-  // Verify SMTP connection — logs clearly if auth/network fails
+  // Verify connection
   try {
     await transporter.verify();
-    console.log("[sendEmail] ✅ Brevo SMTP connection verified successfully.");
+    console.log("[sendEmail] ✅ GMAIL SMTP connection verified successfully.");
   } catch (verifyErr) {
-    console.error("[sendEmail] ❌ Brevo SMTP verification FAILED:", verifyErr.message);
-    throw verifyErr; // propagate so callers see the real error
+    console.error("[sendEmail] ❌ GMAIL SMTP verification FAILED:", verifyErr.message);
+    throw verifyErr;
   }
 
   return transporter;
 };
-
 
 exports.sendDonationEmail = async (email, name, amount) => {
   try {
@@ -106,11 +97,8 @@ exports.sendDocumentRequestAlert = async (name, documentRequested, phone) => {
 
 exports.sendDocumentApproval = async (email, name, documentRequested, id) => {
   console.log(`[APPROVAL] ── Step 1: Approval triggered for ${email}, document: "${documentRequested}", id: ${id}`);
-  console.log(`[APPROVAL] ── Step 2: SMTP_USER(auth)=${process.env.SMTP_USER || 'MISSING!'} | SMTP_FROM(sender)=${process.env.SMTP_FROM || 'MISSING!'} | SMTP_PASS=${process.env.SMTP_PASS ? 'set' : 'MISSING!'}`);
-
-  // Use /tmp which is always writable on Render (ephemeral filesystem)
+  
   const filePath = path.join(os.tmpdir(), `document_${id}.pdf`);
-  console.log(`[APPROVAL] ── Step 3: PDF will be written to: ${filePath}`);
 
   try {
     // ── STEP 4: Generate PDF ─────────────────────────────────────────────────
@@ -138,17 +126,13 @@ exports.sendDocumentApproval = async (email, name, documentRequested, id) => {
         console.log(`[APPROVAL] ── Step 4: PDF generated successfully at ${filePath}`);
         resolve();
       });
-      stream.on("error", (err) => {
-        console.error(`[APPROVAL] ── Step 4 FAILED: PDF generation error:`, err);
-        reject(err);
-      });
+      stream.on("error", (err) => reject(err));
     });
 
     // ── STEP 5: Send Email ───────────────────────────────────────────────────
-    console.log(`[APPROVAL] ── Step 5: Creating & verifying Brevo SMTP transporter...`);
-    const transporter = await createTransporter(); // verify() is called inside
+    console.log(`[APPROVAL] ── Step 5: Creating & verifying GMAIL transporter...`);
+    const transporter = await createTransporter(); 
 
-    console.log(`[APPROVAL] ── Step 6: Sending approval email from ${process.env.SMTP_FROM} to ${email}...`);
     const info = await transporter.sendMail({
       from: `"Maratha Life Foundation" <${process.env.SMTP_FROM}>`,
       to: email,
@@ -172,17 +156,11 @@ exports.sendDocumentApproval = async (email, name, documentRequested, id) => {
 
     console.log(`[APPROVAL] ── Step 7: SUCCESS ✅ Email sent to ${email}. Message ID: ${info.messageId}`);
 
-    // ── CLEANUP ──────────────────────────────────────────────────────────────
-    try {
-      fs.unlinkSync(filePath);
-      console.log(`[APPROVAL] ── Step 8: Temp PDF deleted from ${filePath}`);
-    } catch (e) {
-      console.warn(`[APPROVAL] ── Step 8 WARN: Could not delete temp PDF:`, e.message);
-    }
+    // CLEANUP
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
 
   } catch (err) {
-    console.error(`[APPROVAL] ── FAILED ❌ Error during approval email flow for ${email}:`);
-    console.error(err);
+    console.error(`[APPROVAL] ── FAILED ❌ Error during approval flow:`, err);
   }
 };
 
@@ -195,14 +173,12 @@ exports.sendDocumentRejection = async (email, name, documentRequested) => {
       subject: `Update on your Request for ${documentRequested}`,
       html: `
         <h2>Hello ${name},</h2>
-        <p>Thank you for reaching out to us regarding the <b>${documentRequested}</b>.</p>
-        <p>Unfortunately, we are unable to approve your request at this time as we could not verify your organizational details or purpose.</p>
-        <p>Please feel free to submit a new request with more detailed information if you believe this is a mistake.</p>
+        <p>Unfortunately, we are unable to approve your request for <b>${documentRequested}</b> at this time.</p>
         <p>Warm regards,<br>Maratha Life Foundation</p>
       `
     });
-    console.log(`Document rejection email successfully sent to ${email}. Message ID: ${info.messageId}`);
+    console.log(`Rejection email sent to ${email}.`);
   } catch (err) {
-    console.error(`Failed to send rejection email to ${email}. Error:`, err.message);
+    console.error(`Failed to send rejection email:`, err.message);
   }
 };
