@@ -18,10 +18,11 @@
   <header class="navbar">
     <div class="nav-container">
       <div class="brand">
-        <!-- Logo Image placeholder. User can replace logo.png with their actual file -->
         <img src="images/logo.png" alt="Maratha Life Foundation Logo" class="brand-logo" id="logo-img"
           onerror="this.src='https://ui-avatars.com/api/?name=MLF&background=C24E38&color=fff&rounded=true&size=128'">
-        <h1 class="brand-name">Maratha Life Foundation</h1>
+        <h1 class="brand-name">
+  <a href="#" style="text-decoration: none; color: inherit;">Maratha Life Foundation</a>
+</h1>
       </div>
 
       <nav class="nav-menu">
@@ -61,13 +62,11 @@
       </div>
     </section>
 
-    <!-- TRUST STRIP SECTION -->
     <section class="trust-strip fade-in">
       <div class="trust-container">
         <div class="trust-left">
           <div class="trust-item">
             <div class="trust-icon">
-              <!-- Shield Icon -->
               <svg viewBox="0 0 24 24" fill="none" class="icon-blue" width="24" height="24">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="#3b82f6" />
               </svg>
@@ -79,7 +78,6 @@
           </div>
           <div class="trust-item">
             <div class="trust-icon">
-              <!-- Bank/Govt Icon -->
               <svg viewBox="0 0 24 24" fill="none" class="icon-gray" width="24" height="24">
                 <path d="M4 10h16v9H4zM3 19h18v2H3zM12 2L3 7h18L12 2zM6 10v9h2v-9H6zm4 0v9h2v-9h-2zm4 0v9h2v-9h-2z"
                   fill="#6b7280" />
@@ -118,7 +116,6 @@
       </div>
     </section>
 
-    <!-- OUR JOURNEY SECTION -->
     <section class="our-journey fade-in" id="story">
       <div class="journey-container">
         <div class="journey-image-wrapper">
@@ -170,7 +167,6 @@
       </div>
     </section>
 
-    <!-- OUR GROUND WORK SECTION -->
     <section class="ground-work fade-in" id="work">
       <div class="ground-container">
         <div class="ground-header">
@@ -181,7 +177,6 @@
         </div>
 
         <div class="cards-grid">
-          <!-- Card 1 -->
           <div class="program-card fade-in-scroll">
             <div class="card-img-wrapper">
               <img src="images/elderly.jpg" alt="Elderly Orphanage" class="card-img"
@@ -194,7 +189,6 @@
             </div>
           </div>
 
-          <!-- Card 2 -->
           <div class="program-card fade-in-scroll">
             <div class="card-img-wrapper">
               <img src="images/orphan.png" alt="Orphan Care" class="card-img"
@@ -207,7 +201,6 @@
             </div>
           </div>
 
-          <!-- Card 3 -->
           <div class="program-card fade-in-scroll">
             <div class="card-img-wrapper">
               <img src="images/rehab-1.jpg" alt="Rehabilitation Center" class="card-img"
@@ -220,7 +213,6 @@
             </div>
           </div>
 
-          <!-- Card 4 -->
           <div class="program-card fade-in-scroll">
             <div class="card-img-wrapper">
               <img src="images/gurukul.jpg" alt="Gurukul" class="card-img"
@@ -233,7 +225,6 @@
             </div>
           </div>
 
-          <!-- Card 5 -->
           <div class="program-card fade-in-scroll">
             <div class="card-img-wrapper">
               <img src="images/deaddiction.jpg" alt="De-Addiction Center" class="card-img"
@@ -246,7 +237,6 @@
             </div>
           </div>
 
-          <!-- Card 6 -->
           <div class="program-card fade-in-scroll">
             <div class="card-img-wrapper">
               <img src="images/gaushala.jpg" alt="Gaushala" class="card-img"
@@ -263,15 +253,11 @@
     </section>
 
 
-    <!-- =====================================================
-         COMBINED DONATE SECTION (#donate)
-    ====================================================== -->
     <section class="donate-section fade-in" id="donate">
       <div class="donate-container">
 
         <div class="donate-ui-row">
 
-          <!-- LEFT: Emotion + Testimonial -->
           <div class="donate-left">
             <h2 class="donate-heading">Your Support Keeps Our Kitchen Cooking and Doors Open.</h2>
             <p class="donate-desc">
@@ -285,7 +271,6 @@
             </blockquote>
           </div>
 
-          <!-- RIGHT: Donation Box -->
           <div class="donate-right">
             <div class="donate-box">
 
@@ -293,14 +278,12 @@
                 ₹0 raised so far ❤️
               </h3>
 
-              <!-- Tabs -->
               <div class="donate-tabs">
                 <button class="donate-tab" id="tab-onetime" onclick="switchTab('onetime')">One-Time Gift</button>
                 <button class="donate-tab active" id="tab-monthly" onclick="switchTab('monthly')">Become a Monthly
                   Supporter</button>
               </div>
 
-              <!-- Tab Content: One-time -->
               <div class="donate-tab-content" id="content-onetime" style="display:none;">
                 <p class="donate-tab-desc">Make a one-time contribution that directly helps those in need today.</p>
                 <div class="donate-amounts-grid">
@@ -318,12 +301,11 @@
                   </button>
                   <button class="amount-btn" onclick="selectAmount(this, 5000)">
                     <span class="amount-value">₹5,000</span>
-                    <span class="amount-label">Support comprehensive medical &amp; elder care</span>
+                    <span class="amount-label">Support comprehensive medical & elder care</span>
                   </button>
                 </div>
               </div>
 
-              <!-- Tab Content: Monthly -->
               <div class="donate-tab-content" id="content-monthly">
                 <p class="donate-tab-desc">Join our inner circle of caretakers. Your monthly commitment directly keeps
                   our kitchen running and our doors open.</p>
@@ -342,26 +324,23 @@
                   </button>
                   <button class="amount-btn" onclick="selectAmount(this, 5000)">
                     <span class="amount-value">₹5,000</span>
-                    <span class="amount-label">Support comprehensive medical &amp; elder care</span>
+                    <span class="amount-label">Support comprehensive medical & elder care</span>
                   </button>
                 </div>
               </div>
 
-              <!-- Donor Info -->
               <div class="donate-donor-info" style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px;">
                 <input type="text" id="donor-name" class="donate-custom-input" placeholder="Full Name" required>
                 <input type="email" id="donor-email" class="donate-custom-input" placeholder="Email Address" required>
                 <input type="tel" id="donor-phone" class="donate-custom-input" placeholder="Phone Number" required>
               </div>
 
-              <!-- Custom Amount -->
               <div class="donate-custom">
                 <span class="donate-currency">₹</span>
                 <input type="number" id="custom-amount" class="donate-custom-input"
                   placeholder="Enter amount of your choice" min="1" value="500" oninput="setCustomAmount(this.value)">
               </div>
 
-              <!-- CTA -->
               <div style="text-align: center; margin-bottom: 15px;">
                 <p style="font-size:12px;color:gray">
                   Every ₹500 helps feed families for a day
@@ -371,30 +350,20 @@
                 Donate ₹500 Securely
               </button>
 
-              <!-- Trust text -->
               <p class="donate-trust-text">
                 🔒 100% Secure Transaction via UPI / Cards / Net Banking.<br>
                 <span>Official 80G Tax Receipt generated and emailed instantly. PAN required.</span>
               </p>
 
-            </div><!-- /donate-box -->
-          </div>
+            </div></div>
 
-        </div><!-- /donate-ui-row -->
-
-      </div><!-- /donate-container -->
-    </section><!-- /donate-section -->
-
-    <!-- CAMPAIGN / DONATION SECTION -->
-
-    <section class="campaign-section fade-in" id="campaign">
+        </div></div></section><section class="campaign-section fade-in" id="campaign">
       <div class="campaign-container">
 
-        <!-- HERO ROW: left text + right image -->
         <div class="campaign-hero-row">
           <div class="campaign-hero-left">
             <span class="campaign-tag">URGENT SUPPORT NEEDED</span>
-            <h2 class="campaign-heading">Help Us Build a Safe &amp; Dignified Home</h2>
+            <h2 class="campaign-heading">Help Us Build a Safe & Dignified Home</h2>
             <p class="campaign-subtext">
               Support the construction of our new Sarvamangal Niketan Ashram, designed to provide shelter, education,
               and care for hundreds of vulnerable lives.
@@ -403,7 +372,6 @@
               You can choose to contribute to a specific part of the building or support a complete system.
             </p>
 
-            <!-- Progress Bar -->
             <div class="campaign-progress-wrapper">
               <div class="campaign-progress-labels">
                 <span>Raised: <strong id="campaignRaised">₹1,20,000</strong></span>
@@ -423,7 +391,6 @@
           </div>
         </div>
 
-        <!-- PART 1: FLOOR-WISE DONATION -->
         <div class="floor-donation fade-in-scroll">
           <div class="donation-section-header">
             <span class="section-subtitle">FLOOR BY FLOOR</span>
@@ -432,7 +399,6 @@
 
           <div class="floor-cards-grid">
 
-            <!-- Ground Floor -->
             <div class="floor-card fade-in-scroll">
               <div class="floor-card-badge">Ground</div>
               <div class="floor-card-icon">
@@ -442,14 +408,13 @@
                 </svg>
               </div>
               <div class="floor-card-body">
-                <h4 class="floor-card-title">Banquet &amp; Multipurpose Hall</h4>
+                <h4 class="floor-card-title">Banquet & Multipurpose Hall</h4>
                 <p class="floor-card-desc">A space for community events, sustainability activities, and social
                   gatherings.</p>
               </div>
               <a href="#donate" class="btn btn-floor">Fund This Floor</a>
             </div>
 
-            <!-- 1st Floor -->
             <div class="floor-card fade-in-scroll">
               <div class="floor-card-badge">1st Floor</div>
               <div class="floor-card-icon">
@@ -466,7 +431,6 @@
               <a href="#donate" class="btn btn-floor">Fund This Floor</a>
             </div>
 
-            <!-- 2nd Floor -->
             <div class="floor-card fade-in-scroll">
               <div class="floor-card-badge">2nd Floor</div>
               <div class="floor-card-icon">
@@ -482,7 +446,6 @@
               <a href="#donate" class="btn btn-floor">Fund This Floor</a>
             </div>
 
-            <!-- 3rd Floor -->
             <div class="floor-card fade-in-scroll">
               <div class="floor-card-badge">3rd Floor</div>
               <div class="floor-card-icon">
@@ -494,14 +457,13 @@
                 </svg>
               </div>
               <div class="floor-card-body">
-                <h4 class="floor-card-title">Gurukul &amp; Educational Facilities</h4>
+                <h4 class="floor-card-title">Gurukul & Educational Facilities</h4>
                 <p class="floor-card-desc">Includes classrooms, office space, computer lab, and science lab for
                   children.</p>
               </div>
               <a href="#donate" class="btn btn-floor">Fund This Floor</a>
             </div>
 
-            <!-- 4th Floor -->
             <div class="floor-card fade-in-scroll">
               <div class="floor-card-badge">4th Floor</div>
               <div class="floor-card-icon">
@@ -518,11 +480,7 @@
               <a href="#donate" class="btn btn-floor">Fund This Floor</a>
             </div>
 
-          </div><!-- /floor-cards-grid -->
-        </div><!-- /floor-donation -->
-
-        <!-- PART 2: DONATION BY COMPONENT -->
-        <div class="donation-components fade-in-scroll">
+          </div></div><div class="donation-components fade-in-scroll">
           <div class="donation-section-header">
             <span class="section-subtitle">WHERE YOUR CONTRIBUTION GOES</span>
             <h3 class="donation-section-title">Choose Where Your Contribution Goes</h3>
@@ -530,7 +488,6 @@
 
           <div class="component-cards-grid">
 
-            <!-- Card 1 -->
             <div class="component-card fade-in-scroll">
               <div class="component-card-icon">
                 <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
@@ -540,13 +497,12 @@
                     stroke-linejoin="round" />
                 </svg>
               </div>
-              <h4 class="component-card-title">Shelter &amp; Residential Infrastructure</h4>
+              <h4 class="component-card-title">Shelter & Residential Infrastructure</h4>
               <p class="component-card-desc">Support the construction of living spaces for elderly, destitute
                 individuals, and children in need of safe accommodation.</p>
               <a href="#donate" class="btn btn-component">Donate for this</a>
             </div>
 
-            <!-- Card 2 -->
             <div class="component-card fade-in-scroll">
               <div class="component-card-icon">
                 <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
@@ -556,13 +512,12 @@
                     stroke-linejoin="round" />
                 </svg>
               </div>
-              <h4 class="component-card-title">Education &amp; Child Development Infrastructure</h4>
+              <h4 class="component-card-title">Education & Child Development Infrastructure</h4>
               <p class="component-card-desc">Help build classrooms, learning spaces, computer labs, and educational
                 facilities for underprivileged children.</p>
               <a href="#donate" class="btn btn-component">Donate for this</a>
             </div>
 
-            <!-- Card 3 -->
             <div class="component-card fade-in-scroll">
               <div class="component-card-icon">
                 <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
@@ -570,13 +525,12 @@
                     stroke-linejoin="round" />
                 </svg>
               </div>
-              <h4 class="component-card-title">Health, Nutrition &amp; Care Support</h4>
+              <h4 class="component-card-title">Health, Nutrition & Care Support</h4>
               <p class="component-card-desc">Fund medical care units, nutrition support systems, and daily care
                 facilities for residents.</p>
               <a href="#donate" class="btn btn-component">Donate for this</a>
             </div>
 
-            <!-- Card 4 -->
             <div class="component-card fade-in-scroll">
               <div class="component-card-icon">
                 <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
@@ -585,13 +539,12 @@
                     stroke-linecap="round" />
                 </svg>
               </div>
-              <h4 class="component-card-title">Furniture, Fixtures &amp; Essential Amenities</h4>
+              <h4 class="component-card-title">Furniture, Fixtures & Essential Amenities</h4>
               <p class="component-card-desc">Contribute towards beds, cupboards, dining areas, and essential living
                 infrastructure.</p>
               <a href="#donate" class="btn btn-component">Donate for this</a>
             </div>
 
-            <!-- Card 5 -->
             <div class="component-card fade-in-scroll">
               <div class="component-card-icon">
                 <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
@@ -599,29 +552,19 @@
                     stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
               </div>
-              <h4 class="component-card-title">Safety, Accessibility &amp; Institutional Systems</h4>
+              <h4 class="component-card-title">Safety, Accessibility & Institutional Systems</h4>
               <p class="component-card-desc">Support sanitation, water systems, electrical setups, and safety
                 infrastructure for long-term sustainability.</p>
               <a href="#donate" class="btn btn-component">Donate for this</a>
             </div>
 
-          </div><!-- /component-cards-grid -->
-        </div><!-- /donation-components -->
-
-      </div><!-- /campaign-container -->
-    </section><!-- /campaign-section -->
-
-    <!-- =====================================================
-         GROUND REALITY SECTION
-    ====================================================== -->
-    <section class="ground-reality fade-in">
+          </div></div></div></section><section class="ground-reality fade-in">
       <div class="reality-container">
         <div class="reality-header fade-in-scroll">
           <h2 class="reality-title">Ground Reality</h2>
           <p class="reality-subtext">Unfiltered moments of service and love.</p>
         </div>
 
-        <!-- Image Grid -->
         <div class="reality-grid">
           <div class="reality-card fade-in-zoom">
             <img src="images/children-care.png" alt="Children Care">
@@ -638,16 +581,13 @@
           <div class="reality-card fade-in-zoom" style="transition-delay: 0.3s;">
             <img src="images/rehab.jpg" alt="Rehabilitation">
             <div class="reality-overlay">
-              <span class="reality-caption">Rehabilitation &amp; Support</span>
+              <span class="reality-caption">Rehabilitation & Support</span>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- =====================================================
-         RESCUE TO RECOVERY SECTION
-    ====================================================== -->
     <section class="rescue-recovery fade-in">
       <div class="recovery-container">
         <div class="recovery-content fade-in-scroll">
@@ -663,9 +603,6 @@
       </div>
     </section>
 
-    <!-- =====================================================
-         VOICES OF IMPACT SECTION
-    ====================================================== -->
     <section class="voices-impact fade-in">
       <div class="voices-container">
         <h3 class="voices-subtitle fade-in-scroll">Voices of Impact</h3>
@@ -676,13 +613,9 @@
       </div>
     </section>
 
-    <!-- =====================================================
-         VOLUNTEER SECTION
-    ====================================================== -->
     <section class="volunteer-section fade-in" id="volunteer">
       <div class="volunteer-container">
 
-        <!-- LEFT: Text Content -->
         <div class="volunteer-left">
           <span class="section-subtitle">VOLUNTEER WITH US</span>
           <h2 class="volunteer-heading">Give your time, change a life.</h2>
@@ -696,7 +629,6 @@
           </p>
         </div>
 
-        <!-- RIGHT: Volunteer Form -->
         <div class="volunteer-right">
           <div class="volunteer-form-box">
             <form class="volunteer-form" id="volunteerForm">
@@ -715,9 +647,6 @@
       </div>
     </section>
 
-    <!-- =====================================================
-         LOCATIONS SECTION
-    ====================================================== -->
     <section class="locations-section fade-in" id="locations">
       <div class="locations-container">
         <div class="locations-header fade-in-scroll">
@@ -726,7 +655,6 @@
         </div>
 
         <div class="locations-content">
-          <!-- PRIMARY CENTER -->
           <div class="primary-location-card fade-in-scroll">
             <div class="primary-loc-img-wrapper">
               <img src="images/mlf-building.jpg" alt="Sarvamangal Niketan Ashram" class="primary-loc-img">
@@ -753,23 +681,21 @@
                 District: Palghar, Maharashtra – 401303
               </div>
 
-              <!-- Google Map Embed -->
               <div class="map-embed">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3765.2343831834925!2d72.934895!3d19.39276!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7a5a544b6c311%3A0xcb1db2bb4a80ba4c!2sBhatane%2C%20Maharashtra%20401303!5e0!3m2!1sen!2sin!4v1703080000000!5m2!1sen!2sin"
+                  src="https://maps.google.com/maps?q=Maratha%20Life%20Foundation,%20Bhatane,%20Vasai&t=&z=16&ie=UTF8&iwloc=&output=embed"
                   width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy"
                   referrerpolicy="no-referrer-when-downgrade"></iframe>
               </div>
 
               <div class="primary-loc-actions">
-                <a href="https://maps.google.com/?q=Bhatane,+Vasai,+Maharashtra" target="_blank"
+                <a href="https://share.google/uyFj7npFCitZ65n53" target="_blank"
                   class="btn btn-outline">Open in Maps</a>
                 <a href="#donate" class="btn btn-primary nav-donate-btn">Support This Center</a>
               </div>
             </div>
           </div>
 
-          <!-- SECONDARY LOCATIONS -->
           <div class="secondary-locations fade-in-scroll">
 
             <div class="sec-loc-item">
@@ -777,7 +703,7 @@
               <p class="sec-loc-desc">A dedicated shelter for elderly individuals, providing a safe and peaceful
                 environment with daily care and support.</p>
               <div class="sec-loc-stats">
-                <span><strong>Started:</strong> 2023</span> &nbsp;|&nbsp; <span><strong>Capacity:</strong> 45
+                <span><strong>Started:</strong> 2023</span>  |  <span><strong>Capacity:</strong> 45
                   Residents</span>
               </div>
             </div>
@@ -787,7 +713,7 @@
               <p class="sec-loc-desc">Focused on rehabilitation and long-term support for elderly and mentally or
                 physically challenged individuals.</p>
               <div class="sec-loc-stats">
-                <span><strong>Started:</strong> 2022</span> &nbsp;|&nbsp; <span><strong>Capacity:</strong> 45
+                <span><strong>Started:</strong> 2022</span>  |  <span><strong>Capacity:</strong> 45
                   Residents</span>
               </div>
             </div>
@@ -797,7 +723,7 @@
               <p class="sec-loc-desc">A safe home for individuals in distress, offering shelter, nutrition, and
                 essential care services.</p>
               <div class="sec-loc-stats">
-                <span><strong>Started:</strong> 2025</span> &nbsp;|&nbsp; <span><strong>Capacity:</strong> 40
+                <span><strong>Started:</strong> 2025</span>  |  <span><strong>Capacity:</strong> 40
                   Residents</span>
               </div>
             </div>
@@ -807,7 +733,7 @@
               <p class="sec-loc-desc">Supports elderly orphans, destitute individuals, and vulnerable people requiring
                 long-term institutional care.</p>
               <div class="sec-loc-stats">
-                <span><strong>Started:</strong> 2021</span> &nbsp;|&nbsp; <span><strong>Capacity:</strong> 100
+                <span><strong>Started:</strong> 2021</span>  |  <span><strong>Capacity:</strong> 100
                   Residents</span>
               </div>
             </div>
@@ -819,13 +745,9 @@
 
   </main>
 
-  <!-- =====================================================
-       FOOTER SECTION
-  ====================================================== -->
   <footer class="site-footer fade-in">
     <div class="footer-container">
 
-      <!-- Left: About & Social -->
       <div class="footer-block">
         <h3 class="footer-brand">Maratha Life Foundation</h3>
         <p class="footer-desc">
@@ -842,7 +764,6 @@
         </div>
       </div>
 
-      <!-- Center: Contact -->
       <div class="footer-block">
         <h4 class="footer-heading">Contact Us</h4>
         <ul class="footer-contact-list">
@@ -865,7 +786,6 @@
         </ul>
       </div>
 
-      <!-- Right: Documents & Certifications -->
       <div class="footer-block">
         <h4 class="footer-heading">Request Official Documents</h4>
         <p class="footer-subtext">To maintain transparency and security, documents are shared upon request and approval.
@@ -881,7 +801,6 @@
 
     </div>
 
-    <!-- Our Partners -->
     <div class="footer-partners fade-in-scroll">
       <h4 class="partners-heading">Our Partners</h4>
       <div class="partners-list">
@@ -894,11 +813,19 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2026 Maratha Life Foundation. All rights reserved.</p>
+      <p>© 2026 Maratha Life Foundation. All rights reserved.</p>
     </div>
   </footer>
 
   <script>
+    // ✅ AUTO-DETECT ENVIRONMENT
+    const isLocalhost = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
+    
+    const API_BASE_URL = isLocalhost 
+      ? 'http://localhost:5000' // 👈 Make sure this port matches your local backend terminal!
+      : 'https://maratha-backend.onrender.com'; 
+      
+    console.log("Connecting to backend at:", API_BASE_URL);
     document.addEventListener("DOMContentLoaded", () => {
       // Intersection Observer for scroll animations
       const observerOptions = {
@@ -1045,7 +972,7 @@
 
           try {
             // Step 1: Create Razorpay order on backend
-            const res = await fetch('https://maratha-backend.onrender.com/api/create-order', {
+            const res = await fetch(`${API_BASE_URL}/api/create-order`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ amount: currentAmount })
@@ -1066,39 +993,53 @@
               name: "Maratha Life Foundation",
               description: "Donation",
 
-              handler: function (response) {
-
-                // ✅ RESET UI (VERY IMPORTANT)
+              handler: async function (response) {
+                // ✅ 1. RESET UI IMMEDIATELY
                 document.body.style.opacity = "1";
                 document.body.style.pointerEvents = "auto";
+                if(donateBtn) donateBtn.disabled = false;
 
                 const type = document.getElementById('tab-monthly').classList.contains('active') ? 'monthly' : 'one-time';
 
-                // ✅ SAVE DATA
-                fetch("https://maratha-backend.onrender.com/api/donations", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json"
-                  },
-                  body: JSON.stringify({
-                    name,
-                    email,
-                    phone,
-                    amount: currentAmount,
-                    type,
-                    razorpay_payment_id: response.razorpay_payment_id
-                  })
-                });
+                try {
+                  // ✅ 2. SAVE DATA
+                  const saveResponse = await fetch(`${API_BASE_URL}/api/donations`, {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                      name: name,
+                      email: email,
+                      phone: phone,
+                      amount: currentAmount,
+                      type: type,
+                      razorpay_payment_id: response.razorpay_payment_id
+                    })
+                  });
 
-                // ✅ SUCCESS UI
-                showSuccess();
-                donateBtn.disabled = false;
-                updateCTA();
+                  if (!saveResponse.ok) {
+                     console.warn("Backend warning: Data might not have saved correctly.");
+                  }
+
+                  // ⏳ NEW: Give the database 1.5 seconds to finish saving before we ask for the new total!
+                  await new Promise(resolve => setTimeout(resolve, 1500));
+
+                  // ✅ 3. RE-FETCH TOTALS TO UPDATE THE PROGRESS BAR & TEXT
+                  await loadDonationTotal();
+
+                } catch (error) {
+                  // Catch fetch errors without breaking the rest of the code
+                  console.error("Error updating database or goal meter:", error);
+                } finally {
+                  // ✅ 4. SUCCESS UI (Runs no matter what happens with the database)
+                  showSuccess();
+                  updateCTA();
+                }
               },
 
               modal: {
                 ondismiss: function () {
-
                   // ❌ FIX CLOSE BUTTON ISSUE
                   document.body.style.opacity = "1";
                   document.body.style.pointerEvents = "auto";
@@ -1154,7 +1095,7 @@
           const skills = document.getElementById('vol-skills').value;
           
           try {
-            const response = await fetch('https://maratha-backend.onrender.com/api/volunteers', {
+            const response = await fetch(`${API_BASE_URL}/api/volunteers`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -1280,7 +1221,11 @@
 
     async function loadDonationTotal() {
       try {
-        const res = await fetch("https://maratha-backend.onrender.com/api/donations");
+        // NEW: Added a timestamp to the URL so the browser NEVER caches this specific request
+        const cacheBuster = new Date().getTime();
+        const res = await fetch(`${API_BASE_URL}/api/donations?t=${cacheBuster}`, {
+           headers: { 'Cache-Control': 'no-cache' }
+        });
         const data = await res.json();
 
         let total = 0;
@@ -1295,7 +1240,7 @@
           `₹${total.toLocaleString('en-IN')} raised so far ❤️`;
 
         // 2. Update Campaign Section Live Counter (Stack initial offline offline goal base)
-        const campaignBaseAmount = 120000;
+        const campaignBaseAmount = 90000000;
         const totalRaised = campaignBaseAmount + total;
         
         const campaignRaisedEl = document.getElementById("campaignRaised");
@@ -1313,19 +1258,16 @@
         }
 
       } catch (err) {
-        console.log("Error loading total");
+        console.log("Error loading total", err);
       }
     }
 
     loadDonationTotal();
   </script>
 
-  <!-- =====================================================
-       DOCUMENT REQUEST MODAL
-  ====================================================== -->
   <div class="doc-modal-overlay" id="docModal">
     <div class="doc-modal-content">
-      <span class="doc-modal-close" onclick="closeDocModal()">&times;</span>
+      <span class="doc-modal-close" onclick="closeDocModal()">×</span>
       <h3 class="doc-modal-title">Request Official Document</h3>
       <p class="doc-modal-desc">Please provide your details to request access. Our team will review and share the
         document securely.</p>
