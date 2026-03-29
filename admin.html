@@ -409,7 +409,10 @@
           document.body.innerHTML = "<h2 style='text-align:center;margin-top:50px;'>Access Denied</h2>";
         }
 
-        const API_BASE = 'https://maratha-backend.onrender.com/api';
+        // This checks if you are on your laptop or the live website automatically
+const API_BASE = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost'
+    ? 'http://localhost:5000/api'
+    : 'https://your-backend-url.onrender.com/api'; // Replace with Aaryan's Render URL
 
         // Format Date to DD MMM YYYY
         function formatNiceDate(dateString) {
@@ -573,9 +576,14 @@
                     body: JSON.stringify({ status: newStatus })
                 });
                 const data = await res.json();
+                
                 if (data.success) {
                     alert(`Request has been ${newStatus}. Emails have been dispatched automatically.`);
-                    location.reload();
+                    
+                    // ✅ FIX: Instead of reloading the whole page and asking for the password again,
+                    // we just silently refresh the tables!
+                    fetchDashboardData(); 
+                    
                 } else {
                     alert("Error: " + data.message);
                 }
